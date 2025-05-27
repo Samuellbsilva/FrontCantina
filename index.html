@@ -1,26 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cantina Digital</title>
+    <title>IFFOOD</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         /* Custom scrollbar for better UX on desktop */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f0f0f0; } /* Lighter track */
+        ::-webkit-scrollbar-thumb { background: #4ade80; border-radius: 4px; } /* Green thumb */
+        ::-webkit-scrollbar-thumb:hover { background: #22c55e; } /* Darker green */
+
         /* Basic transition for view changes */
         .view { display: none; animation: fadeIn 0.5s; }
         .view.active { display: block; }
@@ -28,29 +20,31 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .modal {
-            animation: modalFadeIn 0.3s ease-out;
-        }
+        .modal { animation: modalFadeIn 0.3s ease-out; }
         @keyframes modalFadeIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
+        /* Ensure body takes full height if content is sparse */
+        html, body { height: 100%; }
+        body { display: flex; flex-direction: column; }
+        main { flex-grow: 1; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans antialiased">
 
-    <header class="bg-orange-500 text-white shadow-md fixed top-0 left-0 right-0 z-50">
+    <header class="bg-green-600 text-white shadow-md fixed top-0 left-0 right-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-2xl font-bold cursor-pointer" onclick="navigateTo('productList')">Cantina Digital <i class="fas fa-utensils"></i></h1>
+            <h1 class="text-2xl font-bold cursor-pointer" onclick="navigateTo('productList')">IFFOOD <i class="fas fa-utensils"></i></h1>
             <nav class="flex items-center space-x-4">
-                <button id="cartButton" onclick="showCartView()" class="relative hover:text-orange-200 transition duration-150">
+                <button id="cartButton" onclick="showCartView()" class="relative hover:text-green-200 transition duration-150">
                     <i class="fas fa-shopping-cart text-xl"></i>
                     <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
                 </button>
-                <button id="adminLoginButton" onclick="showAdminLoginView()" class="hover:text-orange-200 transition duration-150 md:hidden">
+                <button id="adminLoginButton" onclick="showAdminLoginView()" class="hover:text-green-200 transition duration-150 md:hidden">
                     <i class="fas fa-user-shield text-xl"></i>
                 </button>
-                 <button id="adminAccessButtonDesktop" onclick="handleAdminAccessDesktop()" class="hidden md:block bg-white text-orange-500 px-3 py-1 rounded-md hover:bg-orange-100 transition duration-150 text-sm font-medium">
+                 <button id="adminAccessButtonDesktop" onclick="handleAdminAccessDesktop()" class="hidden md:block bg-white text-green-600 px-3 py-1 rounded-md hover:bg-green-100 transition duration-150 text-sm font-medium">
                     Admin
                 </button>
             </nav>
@@ -60,19 +54,20 @@
     <main id="mainContent" class="container mx-auto px-4 pt-20 pb-16 md:pt-24">
         <section id="productList" class="view">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <h2 class="text-2xl font-semibold text-gray-700">Nossos Produtos 🍔🥤</h2>
+                <h2 class="text-2xl font-semibold text-gray-700">Nossos Produtos <i class="fas fa-hamburger text-yellow-500"></i><i class="fas fa-wine-glass-alt text-red-500"></i></h2>
                 <div class="w-full md:w-1/3">
-                    <input type="text" id="searchInput" placeholder="Buscar produtos..." class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <input type="text" id="searchInput" placeholder="Buscar produtos..." class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                 </div>
             </div>
             <div id="productListContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                </div>
+                <p id="productListMessage" class="col-span-full text-center text-gray-500 py-10 hidden">Carregando produtos...</p>
+            </div>
         </section>
 
         <div id="cartViewModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 p-4 modal">
             <div class="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[85vh] flex flex-col">
                 <div class="flex justify-between items-center p-4 border-b">
-                    <h3 class="text-xl font-semibold text-gray-800">Seu Carrinho <i class="fas fa-shopping-bag"></i></h3>
+                    <h3 class="text-xl font-semibold text-gray-800">Seu Carrinho <i class="fas fa-shopping-bag text-green-500"></i></h3>
                     <button onclick="closeModal('cartViewModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
                 </div>
                 <div id="cartItemsContainer" class="p-4 space-y-3 overflow-y-auto">
@@ -80,9 +75,9 @@
                 <div class="p-4 border-t mt-auto">
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-lg font-semibold text-gray-700">Total:</span>
-                        <span id="cartTotal" class="text-xl font-bold text-orange-600">R$ 0.00</span>
+                        <span id="cartTotal" class="text-xl font-bold text-green-600">R$ 0.00</span>
                     </div>
-                    <button id="checkoutButton" onclick="checkout()" class="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition duration-150 font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-orange-400">
+                    <button id="checkoutButton" onclick="checkout()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-150 font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-green-400">
                         Finalizar Pedido <i class="fas fa-check-circle"></i>
                     </button>
                 </div>
@@ -94,9 +89,9 @@
                 <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
                 <h3 class="text-2xl font-semibold text-gray-800 mb-2">Pedido Realizado!</h3>
                 <p class="text-gray-600 mb-1">Seu código para retirada é:</p>
-                <p id="pickupCode" class="text-3xl font-bold text-orange-600 bg-orange-100 py-2 px-4 rounded-lg inline-block my-3"></p>
+                <p id="pickupCode" class="text-3xl font-bold text-green-600 bg-green-100 py-2 px-4 rounded-lg inline-block my-3"></p>
                 <p class="text-gray-600 mb-4">Valor Total: <span id="orderTotalValue" class="font-semibold"></span></p>
-                <button onclick="closeModal('orderConfirmationModal'); navigateTo('productList');" class="bg-orange-500 text-white py-2 px-6 rounded-lg hover:bg-orange-600 transition duration-150">
+                <button onclick="closeModal('orderConfirmationModal'); navigateTo('productList');" class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition duration-150">
                     Voltar aos Produtos
                 </button>
             </div>
@@ -104,29 +99,29 @@
 
         <section id="adminLoginView" class="view">
             <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg mt-10">
-                <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Acesso Admin <i class="fas fa-key"></i></h2>
+                <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Acesso Admin <i class="fas fa-key text-green-500"></i></h2>
                 <form id="adminLoginForm">
                     <div class="mb-4">
                         <label for="apiKey" class="block text-sm font-medium text-gray-700 mb-1">Chave de API</label>
-                        <input type="password" id="apiKey" name="apiKey" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Sua chave secreta">
+                        <input type="password" id="apiKey" name="apiKey" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Sua chave secreta">
                     </div>
-                    <button type="submit" class="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition duration-150 font-semibold">Entrar</button>
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-150 font-semibold">Entrar</button>
                 </form>
-                 <p class="text-center mt-4"><button onclick="navigateTo('productList')" class="text-sm text-orange-500 hover:underline">Voltar para a loja</button></p>
+                 <p class="text-center mt-4"><button onclick="navigateTo('productList')" class="text-sm text-green-500 hover:underline">Voltar para a loja</button></p>
             </div>
         </section>
 
         <section id="adminDashboardView" class="view">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold text-gray-700">Painel Admin <i class="fas fa-tachometer-alt"></i></h2>
+                <h2 class="text-2xl font-semibold text-gray-700">Painel Admin <i class="fas fa-tachometer-alt text-green-500"></i></h2>
                 <button onclick="adminLogout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-150 text-sm">Sair <i class="fas fa-sign-out-alt"></i></button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-1">Ganhos de Hoje</h3>
-                    <p id="dailyEarnings" class="text-3xl font-bold text-green-500">R$ 0.00</p>
-                    <p id="dailyOrdersCount" class="text-sm text-gray-500">0 pedidos hoje</p>
-                     <input type="date" id="earningsDate" class="mt-2 p-1 border rounded text-sm">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-1">Ganhos <i class="fas fa-dollar-sign text-green-500"></i></h3>
+                    <input type="date" id="earningsDate" class="mb-2 p-2 border rounded text-sm w-full md:w-auto focus:ring-green-500 focus:border-green-500">
+                    <p id="dailyEarnings" class="text-3xl font-bold text-green-600">R$ 0.00</p>
+                    <p id="dailyOrdersCount" class="text-sm text-gray-500">0 pedidos</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-center items-center">
                      <h3 class="text-lg font-semibold text-gray-700 mb-2">Ações Rápidas</h3>
@@ -143,10 +138,10 @@
 
         <section id="adminProductManagementView" class="view">
              <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold text-gray-700">Gerenciar Produtos <i class="fas fa-edit"></i></h2>
+                <h2 class="text-2xl font-semibold text-gray-700">Gerenciar Produtos <i class="fas fa-edit text-green-500"></i></h2>
                 <div>
-                    <button onclick="showProductFormModal()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-150 mr-2">Novo Produto <i class="fas fa-plus-circle"></i></button>
-                    <button onclick="navigateTo('adminDashboardView')" class="text-sm text-orange-500 hover:underline">Voltar ao Painel</button>
+                    <button onclick="showProductFormModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-150 mr-2">Novo Produto <i class="fas fa-plus-circle"></i></button>
+                    <button onclick="navigateTo('adminDashboardView')" class="text-sm text-green-500 hover:underline">Voltar ao Painel</button>
                 </div>
             </div>
             <div id="adminProductListContainer" class="bg-white p-4 rounded-lg shadow overflow-x-auto">
@@ -155,8 +150,8 @@
 
         <section id="adminOrderListView" class="view">
              <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold text-gray-700">Todos os Pedidos <i class="fas fa-receipt"></i></h2>
-                <button onclick="navigateTo('adminDashboardView')" class="text-sm text-orange-500 hover:underline">Voltar ao Painel</button>
+                <h2 class="text-2xl font-semibold text-gray-700">Todos os Pedidos <i class="fas fa-receipt text-green-500"></i></h2>
+                <button onclick="navigateTo('adminDashboardView')" class="text-sm text-green-500 hover:underline">Voltar ao Painel</button>
             </div>
             <div id="adminOrdersFullListContainer" class="bg-white p-4 rounded-lg shadow overflow-x-auto">
                 </div>
@@ -172,30 +167,30 @@
                     <input type="hidden" id="productId">
                     <div>
                         <label for="productName" class="block text-sm font-medium text-gray-700">Nome</label>
-                        <input type="text" id="productName" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                        <input type="text" id="productName" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                     <div>
                         <label for="productDescription" class="block text-sm font-medium text-gray-700">Descrição</label>
-                        <textarea id="productDescription" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"></textarea>
+                        <textarea id="productDescription" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"></textarea>
                     </div>
                     <div>
                         <label for="productPrice" class="block text-sm font-medium text-gray-700">Preço (R$)</label>
-                        <input type="number" id="productPrice" step="0.01" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm">
+                        <input type="number" id="productPrice" step="0.01" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                     </div>
                     <div>
                         <label for="productCategory" class="block text-sm font-medium text-gray-700">Categoria</label>
-                        <input type="text" id="productCategory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm" placeholder="Ex: Salgados, Bebidas">
+                        <input type="text" id="productCategory" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Ex: Salgados, Bebidas">
                     </div>
                     <div>
                         <label for="productImageUrl" class="block text-sm font-medium text-gray-700">URL da Imagem</label>
-                        <input type="url" id="productImageUrl" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm" placeholder="https://exemplo.com/imagem.jpg">
+                        <input type="url" id="productImageUrl" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="https://exemplo.com/imagem.jpg">
                     </div>
                     <div class="flex items-center">
-                        <input type="checkbox" id="productAvailable" checked class="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
+                        <input type="checkbox" id="productAvailable" checked class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
                         <label for="productAvailable" class="ml-2 block text-sm text-gray-900">Disponível</label>
                     </div>
                     <div class="pt-2">
-                        <button type="submit" class="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 font-semibold">Salvar Produto</button>
+                        <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 font-semibold">Salvar Produto</button>
                     </div>
                 </form>
             </div>
@@ -203,14 +198,14 @@
 
     </main>
 
-    <div id="toastNotification" class="fixed bottom-5 right-5 bg-gray-800 text-white py-3 px-5 rounded-lg shadow-lg text-sm hidden animate-pulse z-50">
+    <div id="toastNotification" class="fixed bottom-5 right-5 bg-gray-800 text-white py-3 px-5 rounded-lg shadow-lg text-sm hidden animate-pulse z-[1000]">
         <span id="toastMessage"></span>
     </div>
 
-    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[100]">
-        <div class="p-5 bg-white rounded-lg flex items-center space-x-3">
-            <i class="fas fa-spinner fa-spin text-orange-500 text-2xl"></i>
-            <span class="text-gray-700">Carregando...</span>
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[1001]">
+        <div class="p-5 bg-white rounded-lg flex items-center space-x-3 shadow-xl">
+            <i class="fas fa-spinner fa-spin text-green-500 text-3xl"></i>
+            <span class="text-gray-700 font-medium">Carregando...</span>
         </div>
     </div>
 
@@ -219,20 +214,31 @@
         // #####################################################################
         // # CONFIGURATION                                                     #
         // #####################################################################
-        const API_BASE_URL = 'SUA_URL_DA_API_HOSPEDADA_AQUI'; //  IMPORTANTÍSSIMO: Substitua pela URL da sua API! Ex: 'https://sua-api.onrender.com'
-        const ADMIN_API_KEY_STORAGE = 'cantinaAdminApiKey';
-        const CART_STORAGE_KEY = 'cantinaCart';
+        const API_BASE_URL = 'https://sua-api.onrender.com'; //  IMPORTANTÍSSIMO: Substitua pela URL da sua API! Ex: 'https://sua-api.onrender.com'
+        const ADMIN_API_KEY_STORAGE = 'iffoodAdminApiKey';
+        const CART_STORAGE_KEY = 'iffoodCart';
+
+        // #####################################################################
+        // # DEBUGGING AIDS                                                    #
+        // #####################################################################
+        console.log("IFFOOD Frontend Initializing...");
+        console.log("API Base URL configured as:", API_BASE_URL);
+        if (API_BASE_URL === 'SUA_URL_DA_API_HOSPEDADA_AQUI' || !API_BASE_URL) {
+            console.error("CRITICAL: API_BASE_URL is not set!");
+        }
 
         // #####################################################################
         // # GLOBAL STATE & UTILITIES                                          #
         // #####################################################################
         let currentView = 'productList';
         let cart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY)) || [];
+        let searchTimeout; // For debouncing search
 
         const $ = (selector) => document.querySelector(selector);
         const $$ = (selector) => document.querySelectorAll(selector);
 
         function showLoading(show = true) {
+            // console.log("Loading state changed to:", show);
             $('#loadingOverlay').style.display = show ? 'flex' : 'none';
         }
 
@@ -240,6 +246,7 @@
             const toast = $('#toastNotification');
             const toastMessage = $('#toastMessage');
             toastMessage.textContent = message;
+            console.log(`Toast: [${type}] ${message}`);
 
             toast.classList.remove('bg-gray-800', 'bg-red-600', 'bg-green-600', 'bg-blue-600');
             if (type === 'error') toast.classList.add('bg-red-600');
@@ -248,10 +255,9 @@
             else toast.classList.add('bg-gray-800');
 
             toast.style.display = 'block';
-            toast.classList.remove('animate-pulse'); // ensure it's not pulsing initially
-            void toast.offsetWidth; // Trigger reflow to restart animation
+            toast.classList.remove('animate-pulse');
+            void toast.offsetWidth;
             toast.classList.add('animate-pulse');
-
 
             setTimeout(() => {
                 toast.style.display = 'none';
@@ -260,19 +266,23 @@
         }
 
         function formatCurrency(value) {
-            return parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            if (typeof value !== 'number') value = parseFloat(value);
+            if (isNaN(value)) return 'R$ --,--';
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
         // #####################################################################
         // # VIEW NAVIGATION / ROUTING                                         #
         // #####################################################################
         function navigateTo(viewId) {
+            console.log("Navigating to view:", viewId);
             $$('.view').forEach(view => view.classList.remove('active'));
             const targetView = $(`#${viewId}`);
             if (targetView) {
                 targetView.classList.add('active');
                 currentView = viewId;
-                window.scrollTo(0, 0); // Scroll to top on view change
+                window.scrollTo(0, 0);
+                window.location.hash = viewId; // Update hash for deep linking / refresh
 
                 // Special actions based on view
                 if (viewId === 'productList') loadProducts();
@@ -280,11 +290,11 @@
                 if (viewId === 'adminProductManagementView') loadAdminProducts();
                 if (viewId === 'adminOrderListView') loadAdminFullOrders();
             } else {
-                console.error(`View with id ${viewId} not found.`);
-                navigateTo('productList'); // Fallback to product list
+                console.error(`View with id ${viewId} not found. Defaulting to productList.`);
+                navigateTo('productList');
             }
             updateAdminButtonVisibility();
-            closeAllModals(); // Close any open modals on view change
+            closeAllModals();
         }
 
         function closeModal(modalId) {
@@ -307,13 +317,15 @@
         // # API INTERACTION                                                   #
         // #####################################################################
         async function apiRequest(endpoint, method = 'GET', body = null, requiresAdmin = false) {
+            console.log(`API Request: ${method} ${endpoint}`, body || '');
             showLoading();
             const headers = { 'Content-Type': 'application/json' };
             if (requiresAdmin) {
                 const apiKey = localStorage.getItem(ADMIN_API_KEY_STORAGE);
                 if (!apiKey) {
                     showLoading(false);
-                    showToast('Acesso de Admin não configurado.', 'error');
+                    showToast('Acesso de Admin não configurado ou sessão expirada.', 'error');
+                    console.warn("Admin API Key not found, redirecting to login.");
                     navigateTo('adminLoginView');
                     return null;
                 }
@@ -325,23 +337,47 @@
 
             try {
                 const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-                showLoading(false);
+                showLoading(false); // Hide loading as soon as response metadata is received
+
+                const responseContentType = response.headers.get("content-type");
+                let responseData;
+
+                if (responseContentType && responseContentType.includes("application/json")) {
+                    responseData = await response.json(); // Try to parse JSON
+                } else if (response.status === 204 && method.toUpperCase() === 'DELETE') { // Handle 204 No Content specifically for DELETE
+                     console.log(`API Response: ${response.status} ${response.statusText} (Successfully deleted)`);
+                     return true; // Indicate success for DELETE
+                }
+                 else {
+                    // For non-JSON responses or unexpected content types, get text
+                    const textResponse = await response.text();
+                    console.warn(`API Response: ${response.status} ${response.statusText} - Non-JSON response:`, textResponse);
+                    // If it's not an OK response, and we got text, treat it as an error.
+                    if (!response.ok) {
+                        showToast(textResponse || `Erro na requisição: ${response.status}`, 'error');
+                        return null;
+                    }
+                    responseData = textResponse; // Or handle as needed
+                }
+
+
                 if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({ erro: `Erro ${response.status}: ${response.statusText}` }));
-                    console.error('API Error:', errorData);
-                    showToast(errorData.erro || `Erro na requisição: ${response.status}`, 'error');
-                    if (response.status === 401 && requiresAdmin) { // Unauthorized admin
-                        adminLogout(); // Log out admin
+                    console.error('API Error Response:', response.status, responseData);
+                    const errorMessage = responseData?.erro || responseData?.message || responseData?.detail || `Erro ${response.status}`;
+                    showToast(errorMessage, 'error');
+                    if (response.status === 401 && requiresAdmin) {
+                        console.warn("Admin unauthorized, logging out.");
+                        adminLogout();
                         navigateTo('adminLoginView');
                     }
                     return null;
                 }
-                if (response.status === 204) return true; // No content, but successful (e.g. DELETE)
-                return await response.json();
+                console.log('API Success Response Data:', responseData);
+                return responseData;
             } catch (error) {
                 showLoading(false);
-                console.error('Fetch Error:', error);
-                showToast('Erro de conexão com o servidor. Tente mais tarde.', 'error');
+                console.error('Fetch/Network Error:', error);
+                showToast('Erro de conexão com o servidor. Verifique sua internet ou a URL da API.', 'error');
                 return null;
             }
         }
@@ -351,31 +387,40 @@
         // #####################################################################
         $('#adminLoginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const apiKey = $('#apiKey').value;
-            // Simple test: try to fetch admin orders. If successful, key is valid.
+            const apiKey = $('#apiKey').value.trim();
+            if (!apiKey) {
+                showToast('Por favor, insira sua Chave de API.', 'error');
+                return;
+            }
+            console.log("Attempting admin login with key:", apiKey ? "******" : "EMPTY");
             showLoading();
             const testHeaders = { 'X-API-KEY': apiKey, 'Content-Type': 'application/json' };
             try {
-                const response = await fetch(`${API_BASE_URL}/admin/pedidos?limit=1`, { headers: testHeaders }); // test endpoint
+                // Test by fetching a protected admin resource, e.g., list of orders
+                const response = await fetch(`${API_BASE_URL}/admin/pedidos?limit=1`, { headers: testHeaders });
                 showLoading(false);
                 if (response.ok) {
                     localStorage.setItem(ADMIN_API_KEY_STORAGE, apiKey);
                     $('#apiKey').value = '';
                     showToast('Login de Admin bem-sucedido!', 'success');
+                    console.log("Admin login successful.");
                     navigateTo('adminDashboardView');
                 } else {
-                     const errorData = await response.json().catch(() => ({ erro: `Chave de API inválida.` }));
-                    showToast(errorData.erro || 'Chave de API inválida.', 'error');
+                    const errorData = await response.json().catch(() => ({ erro: 'Chave de API inválida ou erro de autenticação.' }));
+                    showToast(errorData.erro, 'error');
+                    console.error("Admin login failed:", errorData);
                 }
             } catch (error) {
                 showLoading(false);
-                showToast('Erro ao validar chave de API. Verifique a conexão.', 'error');
+                showToast('Erro ao tentar validar chave de API. Verifique a conexão e a URL da API.', 'error');
+                console.error("Error during admin login API call:", error);
             }
         });
 
         function adminLogout() {
             localStorage.removeItem(ADMIN_API_KEY_STORAGE);
             showToast('Você saiu da área de Admin.', 'info');
+            console.log("Admin logged out.");
             navigateTo('productList');
         }
 
@@ -385,15 +430,12 @@
 
         function updateAdminButtonVisibility() {
             const adminButtonDesktop = $('#adminAccessButtonDesktop');
-            const adminButtonMobile = $('#adminLoginButton'); // This one is for login, might need another for dashboard access if logged in
+            const adminButtonMobile = $('#adminLoginButton');
             if (isAdminLoggedIn()) {
                 adminButtonDesktop.textContent = 'Painel Admin';
-                adminButtonDesktop.onclick = () => navigateTo('adminDashboardView');
-                adminButtonMobile.style.display = 'none'; // Hide login button on mobile if logged in
-                 // Potentially add a different admin access button for mobile when logged in
+                adminButtonMobile.style.display = 'none';
             } else {
                 adminButtonDesktop.textContent = 'Admin';
-                adminButtonDesktop.onclick = () => showAdminLoginView();
                 adminButtonMobile.style.display = 'block';
             }
         }
@@ -409,36 +451,48 @@
         function updateCartCount() {
             const count = cart.reduce((sum, item) => sum + item.quantidade, 0);
             $('#cartCount').textContent = count;
+            console.log("Cart count updated:", count);
         }
 
         function saveCart() {
             localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
             updateCartCount();
             renderCartItems(); // Re-render cart items whenever cart changes
+            console.log("Cart saved to localStorage:", cart);
         }
 
         function addToCart(product, quantity = 1) {
-            if (!product || product.preco == null) {
-                console.error("Produto inválido para adicionar ao carrinho:", product);
-                showToast("Erro: Não foi possível adicionar o produto.", "error");
+            console.log("Adding to cart:", product, "Quantity:", quantity);
+            if (!product || typeof product.preco !== 'number') { // Check if price is a number
+                console.error("Produto inválido para adicionar ao carrinho (preço ausente ou inválido):", product);
+                showToast("Erro: Dados do produto incompletos.", "error");
                 return;
             }
             const existingItem = cart.find(item => item.id === product.id);
             if (existingItem) {
                 existingItem.quantidade += quantity;
             } else {
-                cart.push({ ...product, quantidade: quantity });
+                // Ensure all necessary fields are present
+                cart.push({
+                    id: product.id,
+                    nome: product.nome,
+                    preco: product.preco,
+                    imagem_url: product.imagem_url,
+                    quantidade: quantity
+                });
             }
             saveCart();
             showToast(`${product.nome} adicionado ao carrinho!`, 'success');
         }
 
         function removeFromCart(productId) {
+            console.log("Removing from cart, product ID:", productId);
             cart = cart.filter(item => item.id !== productId);
             saveCart();
         }
 
         function updateCartItemQuantity(productId, newQuantity) {
+            console.log("Updating cart item quantity, ID:", productId, "New Qty:", newQuantity);
             const item = cart.find(item => item.id === productId);
             if (item) {
                 if (newQuantity <= 0) {
@@ -451,26 +505,32 @@
         }
 
         function clearCart() {
+            console.log("Clearing cart.");
             cart = [];
             saveCart();
         }
 
         async function checkout() {
+            console.log("Checkout initiated.");
             if (cart.length === 0) {
                 showToast('Seu carrinho está vazio!', 'info');
                 return;
             }
             const orderData = {
                 itens: cart.map(item => ({ produto_id: item.id, quantidade: item.quantidade }))
-                // cliente_identificador: 'opcional_aqui' // Se quiser implementar
             };
+            console.log("Order data for API:", orderData);
             const result = await apiRequest('/pedidos', 'POST', orderData);
-            if (result) {
+            if (result && result.codigo_retirada) { // Check if result and codigo_retirada exist
+                console.log("Order successful:", result);
                 $('#pickupCode').textContent = result.codigo_retirada;
                 $('#orderTotalValue').textContent = formatCurrency(result.valor_total);
                 showModal('orderConfirmationModal');
                 closeModal('cartViewModal');
                 clearCart();
+            } else {
+                console.error("Checkout failed or API returned unexpected data:", result);
+                showToast("Falha ao finalizar o pedido. Tente novamente.", "error");
             }
         }
 
@@ -480,17 +540,20 @@
 
         // --- Client Rendering ---
         function renderProductCard(product) {
-            const imageUrl = product.imagem_url || 'https://via.placeholder.com/300x200.png?text=Sem+Imagem';
+            const imageUrl = product.imagem_url || 'https://via.placeholder.com/300x200.png?text=IFFOOD';
+            // Ensure product for addToCart is stringified correctly
+            const productJsonString = JSON.stringify(product).replace(/"/g, '&quot;');
+
             return `
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transform hover:scale-105 transition-transform duration-300">
                     <img src="${imageUrl}" alt="${product.nome}" class="w-full h-48 object-cover">
                     <div class="p-4 flex flex-col flex-grow">
                         <h3 class="text-lg font-semibold text-gray-800 mb-1 truncate" title="${product.nome}">${product.nome}</h3>
-                        <p class="text-sm text-gray-600 mb-2 flex-grow min-h-[40px]">${product.descricao || 'Sem descrição.'}</p>
-                        <p class="text-xs text-gray-500 mb-2">Categoria: ${product.categoria || 'Geral'}</p>
-                        <div class="flex justify-between items-center mt-auto">
-                            <span class="text-xl font-bold text-orange-600">${formatCurrency(product.preco)}</span>
-                            <button onclick='addToCart(${JSON.stringify(product)})' class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition duration-150 text-sm font-medium">
+                        <p class="text-sm text-gray-600 mb-2 flex-grow min-h-[40px]">${product.descricao || 'Sem descrição disponível.'}</p>
+                        <p class="text-xs text-gray-500 mb-2">Categoria: <span class="font-medium">${product.categoria || 'Geral'}</span></p>
+                        <div class="flex justify-between items-center mt-auto pt-2 border-t border-gray-100">
+                            <span class="text-xl font-bold text-green-600">${formatCurrency(product.preco)}</span>
+                            <button onclick='addToCart(${productJsonString})' class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-150 text-sm font-medium">
                                 <i class="fas fa-cart-plus"></i> Add
                             </button>
                         </div>
@@ -500,44 +563,59 @@
         }
 
         async function loadProducts(searchTerm = '') {
+            console.log("Loading products, search term:", searchTerm);
+            const productListMessage = $('#productListMessage');
+            const container = $('#productListContainer');
+
+            if(container) container.innerHTML = ''; // Clear previous products
+            if(productListMessage) {
+                productListMessage.textContent = 'Carregando produtos...';
+                productListMessage.style.display = 'block';
+            }
+
+
             let endpoint = '/produtos';
             if (searchTerm) {
                 endpoint += `?busca=${encodeURIComponent(searchTerm)}`;
             }
             const products = await apiRequest(endpoint);
-            const container = $('#productListContainer');
+
+            if (productListMessage) productListMessage.style.display = 'none'; // Hide loading message
+
             if (products && container) {
                 if (products.length === 0) {
-                    container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10">Nenhum produto encontrado.</p>`;
+                    container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10">Nenhum produto encontrado ${searchTerm ? 'para "' + searchTerm + '"' : ''}.</p>`;
+                    console.log("No products found.");
                 } else {
                     container.innerHTML = products.map(renderProductCard).join('');
+                    console.log("Products loaded:", products.length);
                 }
             } else if (container) {
-                 container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10">Não foi possível carregar os produtos.</p>`;
+                 container.innerHTML = `<p class="col-span-full text-center text-red-500 py-10">Falha ao carregar os produtos. Verifique o console para mais detalhes.</p>`;
+                 console.error("Failed to load products or container not found.");
             }
         }
 
         $('#searchInput').addEventListener('input', (e) => {
-            // Basic debounce
-            if (this.searchTimeout) clearTimeout(this.searchTimeout);
-            this.searchTimeout = setTimeout(() => {
+            if (searchTimeout) clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
                 loadProducts(e.target.value.trim());
-            }, 300);
+            }, 400); // Debounce
         });
 
 
         function renderCartItem(item) {
             return `
                 <div class="flex items-center justify-between p-3 bg-gray-50 rounded-md shadow-sm" data-product-id="${item.id}">
-                    <div class="flex items-center">
-                        <img src="${item.imagem_url || 'https://via.placeholder.com/50'}" alt="${item.nome}" class="w-12 h-12 object-cover rounded mr-3">
-                        <div>
-                            <h4 class="font-semibold text-gray-700 text-sm">${item.nome}</h4>
+                    <div class="flex items-center overflow-hidden mr-2">
+                        <img src="${item.imagem_url || 'https://via.placeholder.com/50?text=IFFOOD'}" alt="${item.nome}" class="w-12 h-12 object-cover rounded mr-3 flex-shrink-0">
+                        <div class="overflow-hidden">
+                            <h4 class="font-semibold text-gray-700 text-sm truncate" title="${item.nome}">${item.nome}</h4>
                             <p class="text-xs text-gray-500">${formatCurrency(item.preco)}</p>
                         </div>
                     </div>
-                    <div class="flex items-center">
-                        <input type="number" value="${item.quantidade}" min="1" onchange="updateCartItemQuantity(${item.id}, parseInt(this.value))" class="w-14 text-center border border-gray-300 rounded-md py-1 px-1 text-sm mx-2">
+                    <div class="flex items-center flex-shrink-0">
+                        <input type="number" value="${item.quantidade}" min="1" onchange="updateCartItemQuantity(${item.id}, parseInt(this.value))" class="w-14 text-center border border-gray-300 rounded-md py-1 px-1 text-sm mx-2 focus:ring-green-500 focus:border-green-500">
                         <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700 text-lg"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
@@ -547,18 +625,19 @@
         function renderCartItems() {
             const container = $('#cartItemsContainer');
             const cartTotalEl = $('#cartTotal');
+            const checkoutBtn = $('#checkoutButton');
+
             if (cart.length === 0) {
                 container.innerHTML = '<p class="text-center text-gray-500 py-4">Seu carrinho está vazio.</p>';
                 cartTotalEl.textContent = formatCurrency(0);
-                $('#checkoutButton').disabled = true;
-                $('#checkoutButton').classList.add('opacity-50', 'cursor-not-allowed');
-
+                checkoutBtn.disabled = true;
+                checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
                 container.innerHTML = cart.map(renderCartItem).join('');
                 const total = cart.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
                 cartTotalEl.textContent = formatCurrency(total);
-                $('#checkoutButton').disabled = false;
-                $('#checkoutButton').classList.remove('opacity-50', 'cursor-not-allowed');
+                checkoutBtn.disabled = false;
+                checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
 
@@ -570,19 +649,25 @@
 
         // --- Admin Rendering ---
         async function loadAdminDashboard() {
+            console.log("Loading admin dashboard...");
             const earningsDateInput = $('#earningsDate');
-            const selectedDate = earningsDateInput.value || new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+            // Set default date to today if not already set
+            if (!earningsDateInput.value) {
+                earningsDateInput.value = new Date().toISOString().split('T')[0];
+            }
+            const selectedDate = earningsDateInput.value;
 
             const report = await apiRequest(`/admin/relatorios/ganhos?data=${selectedDate}`, 'GET', null, true);
             if (report) {
                 $('#dailyEarnings').textContent = formatCurrency(report.total_ganhos);
-                $('#dailyOrdersCount').textContent = `${report.quantidade_pedidos_no_dia} pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR')}`;
+                $('#dailyOrdersCount').textContent = `${report.quantidade_pedidos_no_dia} pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`; // Ensure UTC interpretation of date
+            } else {
+                 $('#dailyEarnings').textContent = formatCurrency(0);
+                 $('#dailyOrdersCount').textContent = `0 pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`;
             }
-            earningsDateInput.value = selectedDate; // ensure it's set
 
-            // Load some recent orders for the dashboard
             const recentOrders = await apiRequest('/admin/pedidos?limit=5', 'GET', null, true); // Assuming API supports limit
-             const dashboardOrdersContainer = $('#adminDashboardOrdersContainer');
+            const dashboardOrdersContainer = $('#adminDashboardOrdersContainer');
             if(recentOrders && dashboardOrdersContainer){
                 if(recentOrders.length === 0){
                     dashboardOrdersContainer.innerHTML = `<p class="text-center text-gray-500 py-4">Nenhum pedido recente.</p>`;
@@ -599,7 +684,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 ${recentOrders.slice(0, 5).map(order => `
                                     <tr>
-                                        <td class="px-4 py-2 whitespace-nowrap text-orange-600 font-medium">${order.codigo_retirada}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap text-green-600 font-medium">${order.codigo_retirada}</td>
                                         <td class="px-4 py-2 whitespace-nowrap">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}">
                                                 ${order.status}
@@ -613,18 +698,19 @@
                     `;
                 }
             } else if (dashboardOrdersContainer) {
-                 dashboardOrdersContainer.innerHTML = `<p class="text-center text-gray-500 py-4">Erro ao carregar pedidos.</p>`;
+                 dashboardOrdersContainer.innerHTML = `<p class="text-center text-gray-500 py-4">Erro ao carregar pedidos recentes.</p>`;
             }
         }
         $('#earningsDate').addEventListener('change', loadAdminDashboard);
 
 
         function renderAdminProductRow(product) {
+            const productJsonString = JSON.stringify(product).replace(/"/g, '&quot;');
             return `
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-3 whitespace-nowrap">
-                        <img src="${product.imagem_url || 'https://via.placeholder.com/40'}" alt="${product.nome}" class="w-10 h-10 object-cover rounded-md inline-block mr-2">
-                        <span class="font-medium text-gray-800">${product.nome}</span>
+                        <img src="${product.imagem_url || 'https://via.placeholder.com/40?text=IFFOOD'}" alt="${product.nome}" class="w-10 h-10 object-cover rounded-md inline-block mr-2 align-middle">
+                        <span class="font-medium text-gray-800 align-middle">${product.nome}</span>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">${formatCurrency(product.preco)}</td>
                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">${product.categoria || 'N/A'}</td>
@@ -634,14 +720,15 @@
                         </span>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                        <button onclick='showProductFormModal(${JSON.stringify(product)})' class="text-blue-600 hover:text-blue-800 mr-3"><i class="fas fa-edit"></i> Editar</button>
-                        <button onclick='deleteAdminProduct(${product.id}, "${product.nome}")' class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Deletar</button>
+                        <button onclick='showProductFormModal(${productJsonString})' class="text-blue-600 hover:text-blue-800 mr-3"><i class="fas fa-edit"></i> Editar</button>
+                        <button onclick='deleteAdminProduct(${product.id}, "${product.nome.replace(/"/g, '&quot;')}")' class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Deletar</button>
                     </td>
                 </tr>
             `;
         }
 
         async function loadAdminProducts() {
+            console.log("Loading admin products...");
             const products = await apiRequest('/admin/produtos', 'GET', null, true);
             const container = $('#adminProductListContainer');
             if (products && container) {
@@ -666,16 +753,17 @@
                 `;
                 }
             } else if (container) {
-                 container.innerHTML = `<p class="text-center text-gray-500 py-6">Erro ao carregar produtos.</p>`;
+                 container.innerHTML = `<p class="text-center text-gray-500 py-6">Erro ao carregar produtos. Verifique o console.</p>`;
             }
         }
 
         function showProductFormModal(productToEdit = null) {
             const form = $('#productForm');
-            form.reset(); // Reset form fields
+            form.reset();
             $('#productId').value = '';
 
             if (productToEdit) {
+                console.log("Editing product:", productToEdit);
                 $('#productFormTitle').textContent = 'Editar Produto';
                 $('#productId').value = productToEdit.id;
                 $('#productName').value = productToEdit.nome;
@@ -685,6 +773,7 @@
                 $('#productImageUrl').value = productToEdit.imagem_url || '';
                 $('#productAvailable').checked = productToEdit.disponivel;
             } else {
+                 console.log("Adding new product.");
                 $('#productFormTitle').textContent = 'Adicionar Novo Produto';
             }
             showModal('productFormModal');
@@ -694,39 +783,50 @@
             e.preventDefault();
             const productId = $('#productId').value;
             const productData = {
-                nome: $('#productName').value,
-                descricao: $('#productDescription').value,
+                nome: $('#productName').value.trim(),
+                descricao: $('#productDescription').value.trim(),
                 preco: parseFloat($('#productPrice').value),
-                categoria: $('#productCategory').value,
-                imagem_url: $('#productImageUrl').value,
+                categoria: $('#productCategory').value.trim() || 'Geral',
+                imagem_url: $('#productImageUrl').value.trim(),
                 disponivel: $('#productAvailable').checked
             };
 
+            if (!productData.nome || isNaN(productData.preco) || productData.preco <= 0) {
+                showToast("Nome e Preço válido são obrigatórios.", "error");
+                return;
+            }
+            console.log("Submitting product form:", productData, "Product ID:", productId);
+
             let result;
-            if (productId) { // Editing
+            if (productId) {
                 result = await apiRequest(`/admin/produtos/${productId}`, 'PUT', productData, true);
-            } else { // Creating
+            } else {
                 result = await apiRequest('/admin/produtos', 'POST', productData, true);
             }
 
             if (result) {
                 showToast(`Produto ${productId ? 'atualizado' : 'adicionado'} com sucesso!`, 'success');
                 closeModal('productFormModal');
-                loadAdminProducts(); // Refresh product list
+                loadAdminProducts();
             }
         });
 
         async function deleteAdminProduct(productId, productName) {
+            console.log("Attempting to delete product:", productId, productName);
             if (confirm(`Tem certeza que deseja deletar o produto "${productName}"?`)) {
                 const result = await apiRequest(`/admin/produtos/${productId}`, 'DELETE', null, true);
-                if (result) { // apiRequest returns true for 204 No Content
+                if (result) { // apiRequest should return true for successful 204 DELETE
                     showToast(`Produto "${productName}" deletado com sucesso!`, 'success');
                     loadAdminProducts();
+                } else {
+                    // Error toast is already shown by apiRequest
+                    console.error("Failed to delete product.");
                 }
             }
         }
 
         function getStatusColor(status) {
+            if (!status) return 'bg-gray-100 text-gray-800';
             switch (status.toUpperCase()) {
                 case 'PENDENTE': return 'bg-yellow-100 text-yellow-800';
                 case 'PREPARANDO': return 'bg-blue-100 text-blue-800';
@@ -738,15 +838,17 @@
         }
 
         function renderAdminOrderRow(order, isFullView = false) {
-            const itemsSummary = order.itens.map(item => `${item.quantidade}x ${item.produto_nome}`).join(', ');
+            const itemsSummary = order.itens && order.itens.length > 0
+                ? order.itens.map(item => `${item.quantidade}x ${item.produto_nome || 'Produto Desconhecido'}`).join(', ')
+                : 'Nenhum item listado';
             return `
                 <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-3 whitespace-nowrap font-medium text-orange-600">${order.codigo_retirada}</td>
+                    <td class="px-4 py-3 whitespace-nowrap font-medium text-green-600">${order.codigo_retirada}</td>
                     ${isFullView ? `<td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">${new Date(order.data_hora).toLocaleString('pt-BR')}</td>` : ''}
-                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600 truncate max-w-xs" title="${itemsSummary}">${itemsSummary}</td>
+                    <td class="px-4 py-3 text-sm text-gray-600 truncate max-w-xs" title="${itemsSummary}">${itemsSummary}</td>
                     <td class="px-4 py-3 whitespace-nowrap font-semibold">${formatCurrency(order.valor_total)}</td>
                     <td class="px-4 py-3 whitespace-nowrap">
-                        <select class="status-select text-xs p-1 rounded-md border-gray-300 focus:ring-orange-500 focus:border-orange-500 ${getStatusColor(order.status).replace('bg-', 'border-').replace('text-', 'text-')} ${getStatusColor(order.status)}" data-order-code="${order.codigo_retirada}" onchange="updateOrderStatus(this)">
+                        <select class="status-select text-xs p-1.5 rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 ${getStatusColor(order.status).replace('bg-', 'border-').replace('text-', 'text-')} ${getStatusColor(order.status)}" data-order-code="${order.codigo_retirada}" onchange="updateOrderStatus(this)">
                             <option value="PENDENTE" ${order.status === 'PENDENTE' ? 'selected' : ''}>Pendente</option>
                             <option value="PREPARANDO" ${order.status === 'PREPARANDO' ? 'selected' : ''}>Preparando</option>
                             <option value="PRONTO" ${order.status === 'PRONTO' ? 'selected' : ''}>Pronto</option>
@@ -758,6 +860,7 @@
             `;
         }
         async function loadAdminFullOrders() {
+            console.log("Loading all admin orders...");
             const orders = await apiRequest('/admin/pedidos', 'GET', null, true);
             const container = $('#adminOrdersFullListContainer');
              if (orders && container) {
@@ -782,27 +885,25 @@
                     `;
                 }
             } else if (container) {
-                 container.innerHTML = `<p class="text-center text-gray-500 py-6">Erro ao carregar pedidos.</p>`;
+                 container.innerHTML = `<p class="text-center text-gray-500 py-6">Erro ao carregar pedidos. Verifique o console.</p>`;
             }
         }
 
         async function updateOrderStatus(selectElement) {
             const orderCode = selectElement.dataset.orderCode;
             const newStatus = selectElement.value;
+            console.log(`Updating status for order ${orderCode} to ${newStatus}`);
             const result = await apiRequest(`/admin/pedidos/${orderCode}/status`, 'PUT', { status: newStatus }, true);
             if (result) {
                 showToast(`Status do pedido ${orderCode} atualizado para ${newStatus}!`, 'success');
-                // Optionally, refresh the list or just update the color of the select
-                selectElement.className = `status-select text-xs p-1 rounded-md border-gray-300 focus:ring-orange-500 focus:border-orange-500 ${getStatusColor(newStatus).replace('bg-', 'border-').replace('text-', 'text-')} ${getStatusColor(newStatus)}`;
-
-                // Refresh relevant view if open
+                selectElement.className = `status-select text-xs p-1.5 rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 ${getStatusColor(newStatus).replace('bg-', 'border-').replace('text-', 'text-')} ${getStatusColor(newStatus)}`;
+                // Refresh dashboard if it's the current view to reflect changes in recent orders list potentially
                 if(currentView === 'adminDashboardView') loadAdminDashboard();
-                if(currentView === 'adminOrderListView') loadAdminFullOrders();
             } else {
                 showToast(`Erro ao atualizar status do pedido ${orderCode}.`, 'error');
-                // Revert select to old status (might need to store old status or re-fetch)
-                 if(currentView === 'adminDashboardView') loadAdminDashboard(); // Quick revert by reloading
-                 if(currentView === 'adminOrderListView') loadAdminFullOrders();
+                 // Revert or reload to avoid inconsistent UI
+                if(currentView === 'adminDashboardView') loadAdminDashboard();
+                if(currentView === 'adminOrderListView') loadAdminFullOrders();
             }
         }
 
@@ -818,12 +919,13 @@
         // # INITIALIZATION                                                    #
         // #####################################################################
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM Fully Loaded and Parsed. Initializing App.");
             if (API_BASE_URL === 'SUA_URL_DA_API_HOSPEDADA_AQUI' || !API_BASE_URL) {
                 document.body.innerHTML = `
                     <div class="h-screen flex flex-col items-center justify-center bg-red-100 p-4">
-                        <h1 class="text-3xl font-bold text-red-700 mb-4">Erro de Configuração!</h1>
-                        <p class="text-red-600 text-center">A variável <code class="bg-red-200 p-1 rounded">API_BASE_URL</code> não foi configurada no JavaScript.</p>
-                        <p class="text-red-600 text-center mt-2">Por favor, edite o arquivo HTML e substitua o valor de <code class="bg-red-200 p-1 rounded">'SUA_URL_DA_API_HOSPEDADA_AQUI'</code> pela URL da sua API backend.</p>
+                        <h1 class="text-3xl font-bold text-red-700 mb-4">Erro de Configuração Crítico!</h1>
+                        <p class="text-red-600 text-center">A variável <code class="bg-red-200 p-1 rounded text-sm">API_BASE_URL</code> não foi configurada corretamente no JavaScript.</p>
+                        <p class="text-red-600 text-center mt-2">Por favor, edite o arquivo HTML (ou o script JS correspondente) e substitua o valor de <code class="bg-red-200 p-1 rounded text-sm">'SUA_URL_DA_API_HOSPEDADA_AQUI'</code> pela URL pública da sua API backend para que a aplicação possa funcionar.</p>
                     </div>
                 `;
                 return;
@@ -832,22 +934,38 @@
             updateCartCount();
             updateAdminButtonVisibility();
 
-            // Determine initial view based on hash or admin login state
             const hash = window.location.hash.substring(1);
-            if (hash && $(`#${hash}`)) {
-                 navigateTo(hash);
+            const validViews = Array.from($$('.view')).map(v => v.id);
+
+            if (hash && validViews.includes(hash)) {
+                 // If hash is adminLoginView, navigate there regardless of login state initially
+                if (hash === 'adminLoginView' && !isAdminLoggedIn()) {
+                    navigateTo('adminLoginView');
+                } else if (hash.startsWith('admin') && !isAdminLoggedIn()) {
+                    console.warn("Attempted to access admin page via hash without login. Redirecting to login.");
+                    navigateTo('adminLoginView');
+                }
+                else {
+                    navigateTo(hash);
+                }
             } else if (isAdminLoggedIn()) {
                 navigateTo('adminDashboardView');
             } else {
                 navigateTo('productList');
             }
 
-            // Simple hash-based routing listener
+            // Listener for hash changes to navigate views
             window.addEventListener('hashchange', () => {
-                const hash = window.location.hash.substring(1);
-                 if (hash && $(`#${hash}`)) {
-                    navigateTo(hash);
-                } else if (!hash) {
+                const newHash = window.location.hash.substring(1);
+                 console.log("Hash changed to:", newHash);
+                if (newHash && validViews.includes(newHash)) {
+                    if (newHash.startsWith('admin') && !isAdminLoggedIn() && newHash !== 'adminLoginView') {
+                         console.warn("Attempted to access admin page via hash change without login. Redirecting to login.");
+                         navigateTo('adminLoginView');
+                    } else {
+                        navigateTo(newHash);
+                    }
+                } else if (!newHash) { // If hash is empty (e.g. user removes it)
                     navigateTo(isAdminLoggedIn() ? 'adminDashboardView' : 'productList');
                 }
             });
