@@ -7,13 +7,13 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        /* Custom scrollbar for better UX on desktop */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f0f0f0; } /* Lighter track */
-        ::-webkit-scrollbar-thumb { background: #4ade80; border-radius: 4px; } /* Green thumb */
-        ::-webkit-scrollbar-thumb:hover { background: #22c55e; } /* Darker green */
 
-        /* Basic transition for view changes */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f0f0f0; } 
+        ::-webkit-scrollbar-thumb { background: #4ade80; border-radius: 4px; } 
+        ::-webkit-scrollbar-thumb:hover { background: #22c55e; } 
+
+    
         .view { display: none; animation: fadeIn 0.5s; }
         .view.active { display: block; }
         @keyframes fadeIn {
@@ -25,7 +25,7 @@
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
-        /* Ensure body takes full height if content is sparse */
+      
         html, body { height: 100%; }
         body { display: flex; flex-direction: column; }
         main { flex-grow: 1; }
@@ -211,34 +211,23 @@
 
 
     <script>
-        // #####################################################################
-        // # CONFIGURATION                                                     #
-        // #####################################################################
-        const API_BASE_URL = 'https://sua-api.onrender.com'; //  IMPORTANTÍSSIMO: Substitua pela URL da sua API! Ex: 'https://sua-api.onrender.com'
+     
+        const API_BASE_URL = 'https://sua-api.onrender.com'; 
         const ADMIN_API_KEY_STORAGE = 'iffoodAdminApiKey';
         const CART_STORAGE_KEY = 'iffoodCart';
-
-        // #####################################################################
-        // # DEBUGGING AIDS                                                    #
-        // #####################################################################
-        console.log("IFFOOD Frontend Initializing...");
-        console.log("API Base URL configured as:", API_BASE_URL);
+        
         if (API_BASE_URL === 'SUA_URL_DA_API_HOSPEDADA_AQUI' || !API_BASE_URL) {
             console.error("CRITICAL: API_BASE_URL is not set!");
         }
 
-        // #####################################################################
-        // # GLOBAL STATE & UTILITIES                                          #
-        // #####################################################################
         let currentView = 'productList';
         let cart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY)) || [];
-        let searchTimeout; // For debouncing search
+        let searchTimeout; 
 
         const $ = (selector) => document.querySelector(selector);
         const $$ = (selector) => document.querySelectorAll(selector);
 
         function showLoading(show = true) {
-            // console.log("Loading state changed to:", show);
             $('#loadingOverlay').style.display = show ? 'flex' : 'none';
         }
 
@@ -246,7 +235,6 @@
             const toast = $('#toastNotification');
             const toastMessage = $('#toastMessage');
             toastMessage.textContent = message;
-            console.log(`Toast: [${type}] ${message}`);
 
             toast.classList.remove('bg-gray-800', 'bg-red-600', 'bg-green-600', 'bg-blue-600');
             if (type === 'error') toast.classList.add('bg-red-600');
@@ -270,10 +258,7 @@
             if (isNaN(value)) return 'R$ --,--';
             return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
-
-        // #####################################################################
-        // # VIEW NAVIGATION / ROUTING                                         #
-        // #####################################################################
+        
         function navigateTo(viewId) {
             console.log("Navigating to view:", viewId);
             $$('.view').forEach(view => view.classList.remove('active'));
@@ -282,9 +267,7 @@
                 targetView.classList.add('active');
                 currentView = viewId;
                 window.scrollTo(0, 0);
-                window.location.hash = viewId; // Update hash for deep linking / refresh
-
-                // Special actions based on view
+                window.location.hash = viewId;
                 if (viewId === 'productList') loadProducts();
                 if (viewId === 'adminDashboardView') loadAdminDashboard();
                 if (viewId === 'adminProductManagementView') loadAdminProducts();
@@ -312,10 +295,6 @@
             if (modal) modal.style.display = 'flex';
         }
 
-
-        // #####################################################################
-        // # API INTERACTION                                                   #
-        // #####################################################################
         async function apiRequest(endpoint, method = 'GET', body = null, requiresAdmin = false) {
             console.log(`API Request: ${method} ${endpoint}`, body || '');
             showLoading();
@@ -337,27 +316,26 @@
 
             try {
                 const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-                showLoading(false); // Hide loading as soon as response metadata is received
+                showLoading(false);
 
                 const responseContentType = response.headers.get("content-type");
                 let responseData;
 
                 if (responseContentType && responseContentType.includes("application/json")) {
-                    responseData = await response.json(); // Try to parse JSON
-                } else if (response.status === 204 && method.toUpperCase() === 'DELETE') { // Handle 204 No Content specifically for DELETE
+                    responseData = await response.json(); 
+                } else if (response.status === 204 && method.toUpperCase() === 'DELETE') {
                      console.log(`API Response: ${response.status} ${response.statusText} (Successfully deleted)`);
-                     return true; // Indicate success for DELETE
+                     return true;
                 }
                  else {
-                    // For non-JSON responses or unexpected content types, get text
+                    
                     const textResponse = await response.text();
                     console.warn(`API Response: ${response.status} ${response.statusText} - Non-JSON response:`, textResponse);
-                    // If it's not an OK response, and we got text, treat it as an error.
                     if (!response.ok) {
                         showToast(textResponse || `Erro na requisição: ${response.status}`, 'error');
                         return null;
                     }
-                    responseData = textResponse; // Or handle as needed
+                    responseData = textResponse; 
                 }
 
 
@@ -382,9 +360,6 @@
             }
         }
 
-        // #####################################################################
-        // # AUTHENTICATION (Admin)                                            #
-        // #####################################################################
         $('#adminLoginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const apiKey = $('#apiKey').value.trim();
@@ -396,7 +371,6 @@
             showLoading();
             const testHeaders = { 'X-API-KEY': apiKey, 'Content-Type': 'application/json' };
             try {
-                // Test by fetching a protected admin resource, e.g., list of orders
                 const response = await fetch(`${API_BASE_URL}/admin/pedidos?limit=1`, { headers: testHeaders });
                 showLoading(false);
                 if (response.ok) {
@@ -444,10 +418,6 @@
             else showAdminLoginView();
         }
 
-
-        // #####################################################################
-        // # CART LOGIC                                                        #
-        // #####################################################################
         function updateCartCount() {
             const count = cart.reduce((sum, item) => sum + item.quantidade, 0);
             $('#cartCount').textContent = count;
@@ -457,13 +427,13 @@
         function saveCart() {
             localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
             updateCartCount();
-            renderCartItems(); // Re-render cart items whenever cart changes
+            renderCartItems();
             console.log("Cart saved to localStorage:", cart);
         }
 
         function addToCart(product, quantity = 1) {
             console.log("Adding to cart:", product, "Quantity:", quantity);
-            if (!product || typeof product.preco !== 'number') { // Check if price is a number
+            if (!product || typeof product.preco !== 'number') { 
                 console.error("Produto inválido para adicionar ao carrinho (preço ausente ou inválido):", product);
                 showToast("Erro: Dados do produto incompletos.", "error");
                 return;
@@ -472,7 +442,7 @@
             if (existingItem) {
                 existingItem.quantidade += quantity;
             } else {
-                // Ensure all necessary fields are present
+
                 cart.push({
                     id: product.id,
                     nome: product.nome,
@@ -521,7 +491,7 @@
             };
             console.log("Order data for API:", orderData);
             const result = await apiRequest('/pedidos', 'POST', orderData);
-            if (result && result.codigo_retirada) { // Check if result and codigo_retirada exist
+            if (result && result.codigo_retirada) { 
                 console.log("Order successful:", result);
                 $('#pickupCode').textContent = result.codigo_retirada;
                 $('#orderTotalValue').textContent = formatCurrency(result.valor_total);
@@ -534,14 +504,9 @@
             }
         }
 
-        // #####################################################################
-        // # RENDERING FUNCTIONS                                               #
-        // #####################################################################
-
-        // --- Client Rendering ---
         function renderProductCard(product) {
             const imageUrl = product.imagem_url || 'https://via.placeholder.com/300x200.png?text=IFFOOD';
-            // Ensure product for addToCart is stringified correctly
+
             const productJsonString = JSON.stringify(product).replace(/"/g, '&quot;');
 
             return `
@@ -567,7 +532,7 @@
             const productListMessage = $('#productListMessage');
             const container = $('#productListContainer');
 
-            if(container) container.innerHTML = ''; // Clear previous products
+            if(container) container.innerHTML = ''; 
             if(productListMessage) {
                 productListMessage.textContent = 'Carregando produtos...';
                 productListMessage.style.display = 'block';
@@ -580,7 +545,7 @@
             }
             const products = await apiRequest(endpoint);
 
-            if (productListMessage) productListMessage.style.display = 'none'; // Hide loading message
+            if (productListMessage) productListMessage.style.display = 'none';
 
             if (products && container) {
                 if (products.length === 0) {
@@ -600,7 +565,7 @@
             if (searchTimeout) clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 loadProducts(e.target.value.trim());
-            }, 400); // Debounce
+            }, 400);
         });
 
 
@@ -646,12 +611,9 @@
             showModal('cartViewModal');
         }
 
-
-        // --- Admin Rendering ---
         async function loadAdminDashboard() {
             console.log("Loading admin dashboard...");
             const earningsDateInput = $('#earningsDate');
-            // Set default date to today if not already set
             if (!earningsDateInput.value) {
                 earningsDateInput.value = new Date().toISOString().split('T')[0];
             }
@@ -660,13 +622,13 @@
             const report = await apiRequest(`/admin/relatorios/ganhos?data=${selectedDate}`, 'GET', null, true);
             if (report) {
                 $('#dailyEarnings').textContent = formatCurrency(report.total_ganhos);
-                $('#dailyOrdersCount').textContent = `${report.quantidade_pedidos_no_dia} pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`; // Ensure UTC interpretation of date
+                $('#dailyOrdersCount').textContent = `${report.quantidade_pedidos_no_dia} pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`; 
             } else {
                  $('#dailyEarnings').textContent = formatCurrency(0);
                  $('#dailyOrdersCount').textContent = `0 pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`;
             }
 
-            const recentOrders = await apiRequest('/admin/pedidos?limit=5', 'GET', null, true); // Assuming API supports limit
+            const recentOrders = await apiRequest('/admin/pedidos?limit=5', 'GET', null, true); 
             const dashboardOrdersContainer = $('#adminDashboardOrdersContainer');
             if(recentOrders && dashboardOrdersContainer){
                 if(recentOrders.length === 0){
@@ -815,11 +777,10 @@
             console.log("Attempting to delete product:", productId, productName);
             if (confirm(`Tem certeza que deseja deletar o produto "${productName}"?`)) {
                 const result = await apiRequest(`/admin/produtos/${productId}`, 'DELETE', null, true);
-                if (result) { // apiRequest should return true for successful 204 DELETE
+                if (result) { 
                     showToast(`Produto "${productName}" deletado com sucesso!`, 'success');
                     loadAdminProducts();
                 } else {
-                    // Error toast is already shown by apiRequest
                     console.error("Failed to delete product.");
                 }
             }
@@ -897,11 +858,9 @@
             if (result) {
                 showToast(`Status do pedido ${orderCode} atualizado para ${newStatus}!`, 'success');
                 selectElement.className = `status-select text-xs p-1.5 rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 ${getStatusColor(newStatus).replace('bg-', 'border-').replace('text-', 'text-')} ${getStatusColor(newStatus)}`;
-                // Refresh dashboard if it's the current view to reflect changes in recent orders list potentially
                 if(currentView === 'adminDashboardView') loadAdminDashboard();
             } else {
                 showToast(`Erro ao atualizar status do pedido ${orderCode}.`, 'error');
-                 // Revert or reload to avoid inconsistent UI
                 if(currentView === 'adminDashboardView') loadAdminDashboard();
                 if(currentView === 'adminOrderListView') loadAdminFullOrders();
             }
@@ -915,9 +874,6 @@
             }
         }
 
-        // #####################################################################
-        // # INITIALIZATION                                                    #
-        // #####################################################################
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOM Fully Loaded and Parsed. Initializing App.");
             if (API_BASE_URL === 'SUA_URL_DA_API_HOSPEDADA_AQUI' || !API_BASE_URL) {
@@ -938,7 +894,6 @@
             const validViews = Array.from($$('.view')).map(v => v.id);
 
             if (hash && validViews.includes(hash)) {
-                 // If hash is adminLoginView, navigate there regardless of login state initially
                 if (hash === 'adminLoginView' && !isAdminLoggedIn()) {
                     navigateTo('adminLoginView');
                 } else if (hash.startsWith('admin') && !isAdminLoggedIn()) {
@@ -954,7 +909,6 @@
                 navigateTo('productList');
             }
 
-            // Listener for hash changes to navigate views
             window.addEventListener('hashchange', () => {
                 const newHash = window.location.hash.substring(1);
                  console.log("Hash changed to:", newHash);
@@ -965,7 +919,7 @@
                     } else {
                         navigateTo(newHash);
                     }
-                } else if (!newHash) { // If hash is empty (e.g. user removes it)
+                } else if (!newHash) { 
                     navigateTo(isAdminLoggedIn() ? 'adminDashboardView' : 'productList');
                 }
             });
