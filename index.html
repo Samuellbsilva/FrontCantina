@@ -7,13 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f0f0f0; } 
         ::-webkit-scrollbar-thumb { background: #4ade80; border-radius: 4px; } 
         ::-webkit-scrollbar-thumb:hover { background: #22c55e; } 
-
-    
+        
         .view { display: none; animation: fadeIn 0.5s; }
         .view.active { display: block; }
         @keyframes fadeIn {
@@ -25,7 +23,7 @@
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
-      
+        
         html, body { height: 100%; }
         body { display: flex; flex-direction: column; }
         main { flex-grow: 1; }
@@ -44,7 +42,7 @@
                 <button id="adminLoginButton" onclick="showAdminLoginView()" class="hover:text-green-200 transition duration-150 md:hidden">
                     <i class="fas fa-user-shield text-xl"></i>
                 </button>
-                 <button id="adminAccessButtonDesktop" onclick="handleAdminAccessDesktop()" class="hidden md:block bg-white text-green-600 px-3 py-1 rounded-md hover:bg-green-100 transition duration-150 text-sm font-medium">
+                <button id="adminAccessButtonDesktop" onclick="handleAdminAccessDesktop()" class="hidden md:block bg-white text-green-600 px-3 py-1 rounded-md hover:bg-green-100 transition duration-150 text-sm font-medium">
                     Admin
                 </button>
             </nav>
@@ -107,7 +105,7 @@
                     </div>
                     <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-150 font-semibold">Entrar</button>
                 </form>
-                 <p class="text-center mt-4"><button onclick="navigateTo('productList')" class="text-sm text-green-500 hover:underline">Voltar para a loja</button></p>
+                <p class="text-center mt-4"><button onclick="navigateTo('productList')" class="text-sm text-green-500 hover:underline">Voltar para a loja</button></p>
             </div>
         </section>
 
@@ -124,20 +122,20 @@
                     <p id="dailyOrdersCount" class="text-sm text-gray-500">0 pedidos</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-center items-center">
-                     <h3 class="text-lg font-semibold text-gray-700 mb-2">Ações Rápidas</h3>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Ações Rápidas</h3>
                     <button onclick="navigateTo('adminProductManagementView')" class="w-full md:w-auto mb-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-150">Gerenciar Produtos <i class="fas fa-box-open"></i></button>
                     <button onclick="navigateTo('adminOrderListView')" class="w-full md:w-auto bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-150">Ver Pedidos <i class="fas fa-list-alt"></i></button>
                 </div>
             </div>
-             <div class="bg-white p-6 rounded-lg shadow-md">
-                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Últimos Pedidos</h3>
-                 <div id="adminDashboardOrdersContainer" class="overflow-x-auto max-h-96">
-                     </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Últimos Pedidos</h3>
+                <div id="adminDashboardOrdersContainer" class="overflow-x-auto max-h-96">
+                    </div>
             </div>
         </section>
 
         <section id="adminProductManagementView" class="view">
-             <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-semibold text-gray-700">Gerenciar Produtos <i class="fas fa-edit text-green-500"></i></h2>
                 <div>
                     <button onclick="showProductFormModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-150 mr-2">Novo Produto <i class="fas fa-plus-circle"></i></button>
@@ -149,7 +147,7 @@
         </section>
 
         <section id="adminOrderListView" class="view">
-             <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-semibold text-gray-700">Todos os Pedidos <i class="fas fa-receipt text-green-500"></i></h2>
                 <button onclick="navigateTo('adminDashboardView')" class="text-sm text-green-500 hover:underline">Voltar ao Painel</button>
             </div>
@@ -211,7 +209,7 @@
 
 
     <script>
-     
+    
         const API_BASE_URL = 'https://sua-api.onrender.com'; 
         const ADMIN_API_KEY_STORAGE = 'iffoodAdminApiKey';
         const CART_STORAGE_KEY = 'iffoodCart';
@@ -324,11 +322,10 @@
                 if (responseContentType && responseContentType.includes("application/json")) {
                     responseData = await response.json(); 
                 } else if (response.status === 204 && method.toUpperCase() === 'DELETE') {
-                     console.log(`API Response: ${response.status} ${response.statusText} (Successfully deleted)`);
-                     return true;
+                    console.log(`API Response: ${response.status} ${response.statusText} (Successfully deleted)`);
+                    return true;
                 }
-                 else {
-                    
+                else {
                     const textResponse = await response.text();
                     console.warn(`API Response: ${response.status} ${response.statusText} - Non-JSON response:`, textResponse);
                     if (!response.ok) {
@@ -337,7 +334,6 @@
                     }
                     responseData = textResponse; 
                 }
-
 
                 if (!response.ok) {
                     console.error('API Error Response:', response.status, responseData);
@@ -538,7 +534,6 @@
                 productListMessage.style.display = 'block';
             }
 
-
             let endpoint = '/produtos';
             if (searchTerm) {
                 endpoint += `?busca=${encodeURIComponent(searchTerm)}`;
@@ -556,8 +551,8 @@
                     console.log("Products loaded:", products.length);
                 }
             } else if (container) {
-                 container.innerHTML = `<p class="col-span-full text-center text-red-500 py-10">Falha ao carregar os produtos. Verifique o console para mais detalhes.</p>`;
-                 console.error("Failed to load products or container not found.");
+                container.innerHTML = `<p class="col-span-full text-center text-red-500 py-10">Falha ao carregar os produtos. Verifique o console para mais detalhes.</p>`;
+                console.error("Failed to load products or container not found.");
             }
         }
 
@@ -624,8 +619,8 @@
                 $('#dailyEarnings').textContent = formatCurrency(report.total_ganhos);
                 $('#dailyOrdersCount').textContent = `${report.quantidade_pedidos_no_dia} pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`; 
             } else {
-                 $('#dailyEarnings').textContent = formatCurrency(0);
-                 $('#dailyOrdersCount').textContent = `0 pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`;
+                $('#dailyEarnings').textContent = formatCurrency(0);
+                $('#dailyOrdersCount').textContent = `0 pedidos em ${new Date(selectedDate + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`;
             }
 
             const recentOrders = await apiRequest('/admin/pedidos?limit=5', 'GET', null, true); 
@@ -660,7 +655,7 @@
                     `;
                 }
             } else if (dashboardOrdersContainer) {
-                 dashboardOrdersContainer.innerHTML = `<p class="text-center text-gray-500 py-4">Erro ao carregar pedidos recentes.</p>`;
+                dashboardOrdersContainer.innerHTML = `<p class="text-center text-gray-500 py-4">Erro ao carregar pedidos recentes.</p>`;
             }
         }
         $('#earningsDate').addEventListener('change', loadAdminDashboard);
@@ -715,7 +710,7 @@
                 `;
                 }
             } else if (container) {
-                 container.innerHTML = `<p class="text-center text-gray-500 py-6">Erro ao carregar produtos. Verifique o console.</p>`;
+                container.innerHTML = `<p class="text-center text-gray-500 py-6">Erro ao carregar produtos. Verifique o console.</p>`;
             }
         }
 
@@ -735,7 +730,7 @@
                 $('#productImageUrl').value = productToEdit.imagem_url || '';
                 $('#productAvailable').checked = productToEdit.disponivel;
             } else {
-                 console.log("Adding new product.");
+                console.log("Adding new product.");
                 $('#productFormTitle').textContent = 'Adicionar Novo Produto';
             }
             showModal('productFormModal');
@@ -824,7 +819,7 @@
             console.log("Loading all admin orders...");
             const orders = await apiRequest('/admin/pedidos', 'GET', null, true);
             const container = $('#adminOrdersFullListContainer');
-             if (orders && container) {
+            if (orders && container) {
                 if (orders.length === 0) {
                     container.innerHTML = `<p class="text-center text-gray-500 py-6">Nenhum pedido encontrado.</p>`;
                 } else {
@@ -846,7 +841,7 @@
                     `;
                 }
             } else if (container) {
-                 container.innerHTML = `<p class="text-center text-gray-500 py-6">Erro ao carregar pedidos. Verifique o console.</p>`;
+                container.innerHTML = `<p class="text-center text-gray-500 py-6">Erro ao carregar pedidos. Verifique o console.</p>`;
             }
         }
 
@@ -876,12 +871,16 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOM Fully Loaded and Parsed. Initializing App.");
-            if (API_BASE_URL === 'SUA_URL_DA_API_HOSPEDADA_AQUI' || !API_BASE_URL) {
+            // A verificação abaixo é apenas um lembrete.
+            // Em produção, a API_BASE_URL já deve ser a do Railway.
+            // Para desenvolvimento local, você pode mudar esta linha para apontar para localhost:5000
+            // const API_BASE_URL = 'http://localhost:5000'; // Exemplo para desenvolvimento local
+            if (API_BASE_URL === 'https://sua-api.onrender.com' || !API_BASE_URL) {
                 document.body.innerHTML = `
                     <div class="h-screen flex flex-col items-center justify-center bg-red-100 p-4">
                         <h1 class="text-3xl font-bold text-red-700 mb-4">Erro de Configuração Crítico!</h1>
-                        <p class="text-red-600 text-center">A variável <code class="bg-red-200 p-1 rounded text-sm">API_BASE_URL</code> não foi configurada corretamente no JavaScript.</p>
-                        <p class="text-red-600 text-center mt-2">Por favor, edite o arquivo HTML (ou o script JS correspondente) e substitua o valor de <code class="bg-red-200 p-1 rounded text-sm">'SUA_URL_DA_API_HOSPEDADA_AQUI'</code> pela URL pública da sua API backend para que a aplicação possa funcionar.</p>
+                        <p class="text-red-600 text-center">A variável <code class="bg-red-200 p-1 rounded text-sm">API_BASE_URL</code> não foi configurada para a sua API deployada.</p>
+                        <p class="text-red-600 text-center mt-2">Por favor, edite a linha <code class="bg-red-200 p-1 rounded text-sm">const API_BASE_URL = '...';</code> no JavaScript e substitua o valor pela URL pública da sua API backend no Railway.</p>
                     </div>
                 `;
                 return;
@@ -894,13 +893,10 @@
             const validViews = Array.from($$('.view')).map(v => v.id);
 
             if (hash && validViews.includes(hash)) {
-                if (hash === 'adminLoginView' && !isAdminLoggedIn()) {
-                    navigateTo('adminLoginView');
-                } else if (hash.startsWith('admin') && !isAdminLoggedIn()) {
+                if (hash.startsWith('admin') && !isAdminLoggedIn() && hash !== 'adminLoginView') {
                     console.warn("Attempted to access admin page via hash without login. Redirecting to login.");
                     navigateTo('adminLoginView');
-                }
-                else {
+                } else {
                     navigateTo(hash);
                 }
             } else if (isAdminLoggedIn()) {
@@ -911,11 +907,11 @@
 
             window.addEventListener('hashchange', () => {
                 const newHash = window.location.hash.substring(1);
-                 console.log("Hash changed to:", newHash);
+                console.log("Hash changed to:", newHash);
                 if (newHash && validViews.includes(newHash)) {
                     if (newHash.startsWith('admin') && !isAdminLoggedIn() && newHash !== 'adminLoginView') {
-                         console.warn("Attempted to access admin page via hash change without login. Redirecting to login.");
-                         navigateTo('adminLoginView');
+                        console.warn("Attempted to access admin page via hash change without login. Redirecting to login.");
+                        navigateTo('adminLoginView');
                     } else {
                         navigateTo(newHash);
                     }
